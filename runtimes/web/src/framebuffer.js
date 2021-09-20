@@ -147,12 +147,13 @@ export class Framebuffer {
 
     drawOval (x, y, width, height) {
         const drawColors = this.drawColors[0];
-        // const dc0 = drawColors & 0xf;
+        const dc0 = drawColors & 0xf;
         const dc1 = (drawColors >>> 4) & 0xf;
         if (dc1 === 0xf) {
             return;
         }
         const strokeColor = (dc1 - 1) & 0x3;
+        const fillColor = (dc0 - 1) & 0x3;
 
         const a = width >>> 1;
         const b = height >>> 1;
@@ -174,6 +175,11 @@ export class Framebuffer {
                 this.drawPointUnclipped(strokeColor, x0 + x, y0 - y); /*  II. Quadrant */
                 this.drawPointUnclipped(strokeColor, x0 - x, y0 + y); /* III. Quadrant */
                 this.drawPointUnclipped(strokeColor, x0 - x, y0 - y); /*  IV. Quadrant */
+                
+                if (fillColor !== 0) {
+                    this.drawHLineInternal(x0-x + 1, (y0+y), x * 2 - 2); /*   I and III. Quadrant */
+                    this.drawHLineInternal(x0-x + 1, (y0-y), x * 2 - 2); /*  II and IV. Quadrant */
+                }
 
                 y++; sy += aa2; e += dy; dy += aa2;
                 if (2 * e + dx > 0) {
@@ -187,6 +193,7 @@ export class Framebuffer {
             let dx = b * b, dy = (1 - 2 * b) * a * a;
             let sx = 0, sy = aa2 * b;
             let e = 0;
+            let ddx = 0;
 
             while (sy >= sx) {
                 this.drawPointUnclipped(strokeColor, x0 + x, y0 + y); /*   I. Quadrant */
@@ -196,6 +203,12 @@ export class Framebuffer {
 
                 x++; sx += bb2; e += dx; dx += bb2;
                 if (2 * e + dy > 0) {
+                    if (ddx < x && fillColor !== 0) {
+                        const w = x-ddx-1;
+                        this.drawHLineInternal(x0-w, (y0+y), w*2); /*   I and III. Quadrant */
+                        this.drawHLineInternal(x0-w, (y0-y), w*2); /*  II and IV. Quadrant */
+                    }
+
                     y--; sy -= aa2; e += dy; dy += aa2;
                 }
             }
