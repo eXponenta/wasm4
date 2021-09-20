@@ -177,8 +177,8 @@ export class Framebuffer {
                 this.drawPointUnclipped(strokeColor, x0 - x, y0 - y); /*  IV. Quadrant */
                 
                 if (fillColor !== 0) {
-                    this.drawHLineInternal(x0-x + 1, (y0+y), x * 2 - 2); /*   I and III. Quadrant */
-                    this.drawHLineInternal(x0-x + 1, (y0-y), x * 2 - 2); /*  II and IV. Quadrant */
+                    this.drawHLineInternal(fillColor, x0-x + 1, (y0+y), x * 2 - 2); /*   I and III. Quadrant */
+                    this.drawHLineInternal(fillColor, x0-x + 1, (y0-y), x * 2 - 2); /*  II and IV. Quadrant */
                 }
 
                 y++; sy += aa2; e += dy; dy += aa2;
@@ -205,8 +205,8 @@ export class Framebuffer {
                 if (2 * e + dy > 0) {
                     if (ddx < x && fillColor !== 0) {
                         const w = x-ddx-1;
-                        this.drawHLineInternal(x0-w, (y0+y), w*2); /*   I and III. Quadrant */
-                        this.drawHLineInternal(x0-w, (y0-y), w*2); /*  II and IV. Quadrant */
+                        this.drawHLineInternal(fillColor, x0-w, (y0+y), w*2); /*   I and III. Quadrant */
+                        this.drawHLineInternal(fillColor, x0-w, (y0-y), w*2); /*  II and IV. Quadrant */
                     }
 
                     y--; sy -= aa2; e += dy; dy += aa2;
