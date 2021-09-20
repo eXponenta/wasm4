@@ -209,6 +209,7 @@ export class Framebuffer {
                         this.drawHLineInternal(fillColor, x0-w, (y0-y), w*2); /*  II and IV. Quadrant */
                     }
 
+                    ddx = 0
                     y--; sy -= aa2; e += dy; dy += aa2;
                 }
             }
